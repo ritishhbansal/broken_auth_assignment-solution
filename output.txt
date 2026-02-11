@@ -1,0 +1,90 @@
+On First test 
+
+Server running at http://localhost:3000
+POST /auth/login
+[OTP] Session vop7q generated with OTP 734796
+POST /auth/login -> 200 (28ms)
+
+" CAN NOT ABLE TO RUN CURL COMMANDS IN MY PC SO I USED POWERSHELL COMMANDS "
+
+PS C:\Users\hp\Downloads\broken_auth_assignment-main> $body = @{
+>>     email = "ritishbansal2006@gmail.com"
+>>     password = "Bansal@2024"
+>> } | ConvertTo-Json
+>> 
+>> Invoke-RestMethod -Method POST `
+>>   -Uri "http://localhost:3000/auth/login" `
+>>   -ContentType "application/json" `
+>>   -Body $body
+>> 
+
+message  loginSessionId
+-------  --------------
+OTP sent vop7q
+
+
+PS C:\Users\hp\Downloads\broken_auth_assignment-main> $verifyBody = @{
+>>     loginSessionId = "vop7q" 
+>>     otp = "734796"
+>> } | ConvertTo-Json
+>> 
+>> Invoke-RestMethod -Method POST `
+>>   -Uri "http://localhost:3000/auth/verify-otp" `
+>>   -ContentType "application/json" `
+>>   -Body $verifyBody `
+>>   -SessionVariable session
+>> 
+
+message      sessionId
+-------      ---------
+OTP verified vop7q
+
+
+PS C:\Users\hp\Downloads\broken_auth_assignment-main> Invoke-RestMethod -Method POST `
+>>   -Uri "http://localhost:3000/auth/token" `
+>>   -WebSession $session
+>>
+
+access_token
+------------
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InJpdGlzaGJh... 
+
+PS C:\Users\hp\Downloads\broken_auth_assignment-main> $response = Invoke-RestMethod -Method POST `
+>>   -Uri "http://localhost:3000/auth/token" `
+>>   -WebSession $session
+>>
+>> $token = $response.access_token
+>>
+PS C:\Users\hp\Downloads\broken_auth_assignment-main> $headers = @{
+>>     Authorization = "Bearer $token"
+>> }
+>>
+>> Invoke-RestMethod -Method GET `
+>>   -Uri "http://localhost:3000/protected" `
+>>   -Headers $headers
+>>
+
+message        user
+-------        ----
+Access granted @{email=ritishbansal2006@gmail.com; sessionId=...
+
+
+Access granted @{email=ritishbansal2006@gmail.com; sesInvoke-RestMethod -Method GET `
+>>   -Uri "http://localhost:3000/protected" `
+>>   -Headers $headers | ConvertTo-Json -Depth 5
+>> C:\Users\hp\Downloads\broken_auth_assignment-main>
+{
+    "message":  "Access granted",
+    "user":  {
+                 "email":  "ritishbansal2006@gmail.com",
+                 "sessionId":  "vop7q",
+                 "iat":  1770830148,
+                 "exp":  1770831048
+             },
+    "success_flag":  "FLAG-cml0aXNoYmFuc2FsMjAwNkBnbWFpbC5jb21fQ09NUExFVEVEX0FTU0lHTk1FTlQ="
+}
+PS C:\Users\hp\Downloads\broken_auth_assignment-main> 
+
+
+
+THIS IS OUTPUT
